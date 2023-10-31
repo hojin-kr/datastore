@@ -5,9 +5,7 @@ import (
 	"fmt"
 	"log"
 	"os"
-)
 
-import (
 	"cloud.google.com/go/datastore"
 	"google.golang.org/api/iterator"
 )
