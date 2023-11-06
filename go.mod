@@ -4,6 +4,7 @@ go 1.21.0
 
 require (
 	cloud.google.com/go/datastore v1.15.0
+	github.com/google/uuid v1.3.1
 	google.golang.org/api v0.148.0
 )
 

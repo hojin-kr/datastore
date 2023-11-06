@@ -38,6 +38,10 @@ func (gcpDatastore *GcpDatastore) GetKey(client *datastore.Client, key string) *
 	return datastore.NameKey(gcpDatastore.Kind, key, nil)
 }
 
+func (gcpDatastore *GcpDatastore) GetIncompleteKey(client *datastore.Client) *datastore.Key {
+	return datastore.IncompleteKey(gcpDatastore.Kind, nil)
+}
+
 func (gcpDatastore *GcpDatastore) Get(key string) string {
 
 	client := gcpDatastore.GetClient()
@@ -64,6 +68,31 @@ func (gcpDatastore *GcpDatastore) Put(key string, value string) {
 	}
 
 	_, err := client.Put(context.Background(), datastoreKey, &entity)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+// put custom entity
+func (gcpDatastore *GcpDatastore) PutEntity(key string, entity interface{}) {
+	client := gcpDatastore.GetClient()
+
+	datastoreKey := gcpDatastore.GetIncompleteKey(client)
+	if key != "" {
+		datastoreKey = gcpDatastore.GetKey(client, key)
+	}
+	_, err := client.Put(context.Background(), datastoreKey, entity)
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+// get custom entity
+func (gcpDatastore *GcpDatastore) GetEntity(key string, entity interface{}) {
+	client := gcpDatastore.GetClient()
+	datastoreKey := gcpDatastore.GetKey(client, key)
+
+	err := client.Get(context.Background(), datastoreKey, entity)
 	if err != nil {
 		fmt.Println(err)
 	}
