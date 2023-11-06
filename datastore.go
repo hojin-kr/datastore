@@ -109,6 +109,35 @@ func (gcpDatastore *GcpDatastore) Delete(key string) {
 	}
 }
 
+// get filterd list
+func (gcpDatastore *GcpDatastore) FilteredList(entity interface{}, colume string, operation string, value string, limit int) (ret interface{}) {
+
+	client := gcpDatastore.GetClient()
+
+	query := datastore.NewQuery(gcpDatastore.Kind).
+		FilterField(colume, operation, value).
+		Limit(limit)
+
+	it := client.Run(context.Background(), query)
+
+	// ret is list of entity
+	ret = []interface{}{}
+	for {
+		_, err := it.Next(entity)
+		if err == iterator.Done {
+			break
+		}
+		if err != nil {
+			fmt.Println(err)
+			break
+		}
+		fmt.Println(entity)
+		ret = append(ret.([]interface{}), entity)
+
+	}
+	return ret
+}
+
 func (gcpDatastore *GcpDatastore) List() {
 
 	client := gcpDatastore.GetClient()

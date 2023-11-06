@@ -44,3 +44,18 @@ func TestPutCustomEntity(t *testing.T) {
 	}
 
 }
+
+// filterdlist
+func TestFilteredList(t *testing.T) {
+	datastore := datastore.GcpDatastore{}
+	datastore.Init()
+	type Friend struct {
+		UUID_Send    string `json:"uuid_send"`
+		UUID_Receive string `json:"uuid_receive"`
+		Status       string `json:"status"`
+		Friend_ID    string `json:"friend_id"`
+	}
+	var friends Friend
+	ret := datastore.FilteredList(&friends, "Status", "=", "pending", 100)
+	t.Logf("%+v\n", ret)
+}
