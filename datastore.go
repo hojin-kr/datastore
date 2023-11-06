@@ -110,13 +110,19 @@ func (gcpDatastore *GcpDatastore) Delete(key string) {
 }
 
 // get filterd list
-func (gcpDatastore *GcpDatastore) FilteredList(entity interface{}, colume string, operation string, value string, limit int) (ret interface{}) {
+func (gcpDatastore *GcpDatastore) FilteredList(entity interface{}, colume string, operation string, value string, colume2 string, operation2 string, value2 string, limit int) (ret interface{}) {
 
 	client := gcpDatastore.GetClient()
-
 	query := datastore.NewQuery(gcpDatastore.Kind).
 		FilterField(colume, operation, value).
 		Limit(limit)
+
+	if colume2 != "" {
+		query = datastore.NewQuery(gcpDatastore.Kind).
+			FilterField(colume, operation, value).
+			FilterField(colume2, operation2, value2).
+			Limit(limit)
+	}
 
 	it := client.Run(context.Background(), query)
 
